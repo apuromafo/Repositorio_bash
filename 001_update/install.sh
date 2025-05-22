@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Nombre del script principal
-SCRIPT_NAME="pcapng_to_pcap.sh"
+SCRIPT_NAME="kali_update.sh"
 MAIN_SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$SCRIPT_NAME"
 
 # Verificar que el script principal exista
 if [ ! -f "$MAIN_SCRIPT_PATH" ]; then
-    echo "Error: No se encontró '$SCRIPT_NAME' en $(dirname "$MAIN_SCRIPT_PATH")"
+    echo "[ERROR] No se encontró '$SCRIPT_NAME' en $(dirname "$MAIN_SCRIPT_PATH")"
     exit 1
 fi
 
@@ -23,7 +23,6 @@ elif command -v xterm &>/dev/null; then
     TERMINAL_EXEC="xterm -e"
 else
     TERMINAL_EXEC="xterm -e"
-    echo "No se detectó un terminal conocido, usando 'xterm' como fallback."
 fi
 
 # Directorios de escritorio y aplicaciones
@@ -35,30 +34,30 @@ APPS_DIR="$HOME/.local/share/applications"
 mkdir -p "$DESKTOP_DIR" "$APPS_DIR"
 
 # Nombre del lanzador
-DESKTOP_FILE_NAME="pcap-converter.desktop"
+DESKTOP_FILE_NAME="kali-updater.desktop"
 DESKTOP_FILE_PATH="$APPS_DIR/$DESKTOP_FILE_NAME"
 
-ICON_PATH="$HOME/.local/share/icons/pcap-converter-icon.png"
+ICON_PATH="$HOME/.local/share/icons/kali-updater-icon.png"
 
 # Crear directorio de iconos si no existe
 mkdir -p "$(dirname "$ICON_PATH")"
 
 # Copiar o descargar un ícono dummy (opcional)
 if [ ! -f "$ICON_PATH" ]; then
-    echo "Descargando ícono dummy..."
+    echo "[*] Descargando ícono dummy..."
     wget -O "$ICON_PATH" "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Terminal_icon.svg/512px-Terminal_icon.svg.png " &>/dev/null || touch "$ICON_PATH"
 fi
 
 # Crear archivo .desktop
 cat > "$DESKTOP_FILE_PATH" <<EOL
 [Desktop Entry]
-Name=PCAPng to PCAP Converter
-Comment=Convierte archivos pcapng a formato pcap usando editcap
+Name=Kali System Updater
+Comment=Actualiza Kali Linux e instala la última clave del repositorio
 Exec=$TERMINAL_EXEC sudo "$MAIN_SCRIPT_PATH"
 Icon=$ICON_PATH
 Terminal=false
 Type=Application
-Categories=Utility;Network;
+Categories=System;PackageManager;
 StartupNotify=false
 EOL
 
@@ -68,7 +67,6 @@ chmod +x "$DESKTOP_FILE_PATH"
 # Opcional: copiar al escritorio
 cp "$DESKTOP_FILE_PATH" "$DESKTOP_DIR/"
 
-# Mensaje final
 echo ""
 echo "✅ ¡Instalación completada!"
 echo "🔹 Script instalado: $MAIN_SCRIPT_PATH"
